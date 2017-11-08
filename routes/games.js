@@ -31,8 +31,8 @@ module.exports = io => {
       const newGame = {
         userId: req.account._id,
         players: [{
-          userId: req.account._id,
-          pairs: []
+          userId: req.account._id
+          // pairs: []
         }],
         cards: utils.shuffle('✿★♦✵♣♠♥✖'.repeat(2).split(''))
           .map((symbol) => ({ visible: false, symbol }))
