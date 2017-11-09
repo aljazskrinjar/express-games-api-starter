@@ -62,8 +62,9 @@ module.exports = io => {
     })
     .patch('/games/:id', authenticate, (req, res, next) => {
       const id = req.params.id
-      const index = req.body
-      const indexNumber = index.index
+      const body = req.body
+      const indexNumber = body.index
+      const currentPlayer = body.userId
 
       Game.findById(id)
         .then((game) => {
@@ -86,18 +87,19 @@ module.exports = io => {
           else if(counterO > counterX ) {fields[indexNumber] = 'X'; turn = 0;}
           else {fields[indexNumber] = 'O'; turn = 1;}
 
+
           if(counterX + counterO + 1 >= 5){
 
-            if( fields[0] === fields[1] && fields[1] === fields[2] && fields[2] !== ''){fields = [9,9,9,9,9,9,9,9,9]}
-            if( fields[3] === fields[4] && fields[4] === fields[5] && fields[5] !== ''){fields = [9,9,9,9,9,9,9,9,9]}
-            if( fields[6] === fields[7] && fields[7] === fields[8] && fields[8] !== ''){fields = [9,9,9,9,9,9,9,9,9]}
+            if( fields[0] === fields[1] && fields[1] === fields[2] && fields[2] !== ''){game.winnerId = currentPlayer}
+            if( fields[3] === fields[4] && fields[4] === fields[5] && fields[5] !== ''){winnerId = currentPlayer}
+            if( fields[6] === fields[7] && fields[7] === fields[8] && fields[8] !== ''){winnerId = currentPlayer}
 
-            if( fields[0] === fields[3] && fields[3] === fields[6] && fields[6] !== ''){fields = [9,9,9,9,9,9,9,9,9]}
-            if( fields[1] === fields[4] && fields[4] === fields[7] && fields[7] !== ''){fields = [9,9,9,9,9,9,9,9,9]}
-            if( fields[2] === fields[5] && fields[5] === fields[8] && fields[8] !== ''){fields = [9,9,9,9,9,9,9,9,9]}
+            if( fields[0] === fields[3] && fields[3] === fields[6] && fields[6] !== ''){winnerId = currentPlayer}
+            if( fields[1] === fields[4] && fields[4] === fields[7] && fields[7] !== ''){winnerId = currentPlayer}
+            if( fields[2] === fields[5] && fields[5] === fields[8] && fields[8] !== ''){winnerId = currentPlayer}
 
-            if( fields[0] === fields[4] && fields[4] === fields[8] && fields[8] !== ''){fields = [9,9,9,9,9,9,9,9,9]}
-            if( fields[2] === fields[4] && fields[4] === fields[6] && fields[6] !== ''){fields = [9,9,9,9,9,9,9,9,9]}
+            if( fields[0] === fields[4] && fields[4] === fields[8] && fields[8] !== ''){winnerId = currentPlayer}
+            if( fields[2] === fields[4] && fields[4] === fields[6] && fields[6] !== ''){winnerId = currentPlayer}
           }
 
 
