@@ -70,7 +70,21 @@ module.exports = io => {
           if (!game) { return next() }
 
           var fields = [...game.fields]
-          fields[indexNumber] = 'X'
+
+          var counterX=0;
+          var counterO=0;
+          for(var i=0; i < fields.length; i++){
+            if( fields [i] === 'O') {counterO++;}
+            if( fields [i] === 'X') {counterX++;}
+          }
+
+          console.log(counterO,counterX)
+
+          if(counterO === 0 && counterX === 0) {fields[indexNumber] = 'O'}
+          else if(counterO > counterX ) {fields[indexNumber] = 'X'}
+          else {fields[indexNumber] = 'O'}
+
+
           const updatedGame = { ...game, fields: fields }
 
           Game.findByIdAndUpdate(id, { $set: updatedGame }, { new: true })
