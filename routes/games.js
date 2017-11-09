@@ -33,7 +33,7 @@ module.exports = io => {
         players: [{
           userId: req.account._id
         }],
-        fields: [0,0,0,0,0,0,0,0,0]
+        fields: ['','','','','','','','','']
       }
 
       Game.create(newGame)
@@ -62,13 +62,16 @@ module.exports = io => {
     })
     .patch('/games/:id', authenticate, (req, res, next) => {
       const id = req.params.id
-      const patchForGame = req.body
+      const index = req.body
+      const indexNumber = index.index
 
       Game.findById(id)
         .then((game) => {
           if (!game) { return next() }
 
-          const updatedGame = { ...game, ...patchForGame }
+          var fields = [...game.fields]
+          fields[indexNumber] = 'X'
+          const updatedGame = { ...game, fields: fields }
 
           Game.findByIdAndUpdate(id, { $set: updatedGame }, { new: true })
             .then((game) => {
