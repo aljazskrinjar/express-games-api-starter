@@ -80,12 +80,14 @@ module.exports = io => {
 
           console.log(counterO,counterX)
 
-          if(counterO === 0 && counterX === 0) {fields[indexNumber] = 'O'}
-          else if(counterO > counterX ) {fields[indexNumber] = 'X'}
-          else {fields[indexNumber] = 'O'}
+          var turn = 0;
+
+          if(counterO === 0 && counterX === 0) {fields[indexNumber] = 'O'; turn = 1;}
+          else if(counterO > counterX ) {fields[indexNumber] = 'X'; turn = 0;}
+          else {fields[indexNumber] = 'O'; turn = 1;}
 
 
-          const updatedGame = { ...game, fields: fields }
+          const updatedGame = { ...game, fields: fields, turn: turn }
 
           Game.findByIdAndUpdate(id, { $set: updatedGame }, { new: true })
             .then((game) => {
