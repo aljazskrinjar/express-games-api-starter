@@ -48,7 +48,9 @@ module.exports = io => {
     })
     .put('/games/:id', authenticate, (req, res, next) => {
       const id = req.params.id
-      const updatedGame = req.body
+      const body = req.body
+
+      const updatedGame = {...body, fields: ['','','','','','','','','']}
 
       Game.findByIdAndUpdate(id, { $set: updatedGame }, { new: true })
         .then((game) => {
