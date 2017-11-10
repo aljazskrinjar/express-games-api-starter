@@ -8,6 +8,7 @@ const gameSchema = new Schema({
   turn: { type: Number, default: 0 }, // player index
   started: { type: Boolean, default: false },
   winner: { type: String, default: '' },
+  count: { type: Number, default: 0 },
   // winnerId: { type: Schema.Types.ObjectId, ref: 'users' },
   userId: { type: Schema.Types.ObjectId, ref: 'users' },
   createdAt: { type: Date, default: Date.now },

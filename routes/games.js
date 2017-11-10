@@ -50,7 +50,7 @@ module.exports = io => {
       const id = req.params.id
       const body = req.body
 
-      const updatedGame = {...body, fields: ['','','','','','','','','']}
+      const updatedGame = {...body, fields: ['','','','','','','','',''], winner: '', draw: false, count: 0, }
 
       Game.findByIdAndUpdate(id, { $set: updatedGame }, { new: true })
         .then((game) => {
@@ -74,24 +74,20 @@ module.exports = io => {
 
           var fields = [...game.fields]
 
-          var counterX=0;
-          var counterO=0;
-          for(var i=0; i < fields.length; i++){
-            if( fields [i] === 'O') {counterO++;}
-            if( fields [i] === 'X') {counterX++;}
-          }
 
-          console.log(counterO,counterX)
+          var turn = game.turn;
+          if(turn == 1){turn = 0}
+          else {turn = 1}
 
-          var turn = 0;
+          const count = game.count
+          if (count % 2 === 0){fields[indexNumber] = 'O';}
+          if (count % 2 === 1){fields[indexNumber] = 'X';}
 
-          if(counterO === 0 && counterX === 0) {fields[indexNumber] = 'O'; turn = 1;}
-          else if(counterO > counterX ) {fields[indexNumber] = 'X'; turn = 0;}
-          else {fields[indexNumber] = 'O'; turn = 1;}
+
 
           var winner = ''
 
-          if(counterX + counterO + 1 >= 5){
+          if( count >= 4){
 
             if( fields[0] === fields[1] && fields[1] === fields[2] && fields[2] !== ''){winner = currentPlayer}
             if( fields[3] === fields[4] && fields[4] === fields[5] && fields[5] !== ''){winner = currentPlayer}
@@ -105,8 +101,11 @@ module.exports = io => {
             if( fields[2] === fields[4] && fields[4] === fields[6] && fields[6] !== ''){winner = currentPlayer}
           }
 
+          draw = false
 
-          const updatedGame = { ...game, fields: fields, turn: turn, winner: winner }
+          if ( count === 8 && winner == '' ){ draw = true }
+
+          const updatedGame = { ...game, fields: fields, turn: turn, winner: winner, draw: draw, count: count + 1  }
 
           Game.findByIdAndUpdate(id, { $set: updatedGame }, { new: true })
             .then((game) => {
